@@ -39,7 +39,12 @@ class StationsOverlay extends google.maps.OverlayView{
       .attr("fill", "black");
     
     let lines = grid.selectAll("line")
-      .data(d3.entries(station_data)).enter()
+      .data(new_station_data).enter()
+    
+    lines.append("line").each(transform)
+      .attr("stroke-width", "4.5px")
+      .attr("stroke", "black")
+      .attr("marker-end", "url(#arrowhead2)")
 
     lines.append("line").each(transform)
       .attr("stroke-width", "3.5px")
@@ -50,23 +55,29 @@ class StationsOverlay extends google.maps.OverlayView{
       .text(function(d) { return d.key; });
 
     function transform(d) {
-      let b = Math.pow((16-d.value[2]), 1.6) * 10.3;
-      d = new google.maps.LatLng(d.value[0], d.value[1]);
-      d = projection.fromLatLngToDivPixel(d);
+      let b = Math.pow((16-d.speed), 1.6) * 10.3;
+      let baseLineSizeX = 10;
+      if(d.value.x < 0) {
+        baseLineSizeX *= -1;  
+      }
+      let baseLineSizeY = 10;
+      if(d.value.y > 0) {
+        baseLineSizeY *= -1;  
+      }
       return d3.select(this)
-        .attr("x1", (d.x + map_width/2 - padding))
-        .attr("y1", (d.y + map_height/2 - padding))
-        .attr("x2", (d.x + map_width/2 + 20 - padding))
-        .attr("y2", (d.y + map_height/2 + 20 - padding))
+        .attr("x1", (d.value.x + map_width/2 - padding - map_width/2))
+        .attr("y1", (d.value.y + map_height/2 - padding - map_height/2))
+        .attr("x2", (d.value.x + map_width/2 + d.speed * d.direction.x * 10 + baseLineSizeX - padding - map_width/2))
+        .attr("y2", (d.value.y + map_height/2 + d.speed * d.direction.y * 10 + baseLineSizeY- padding - map_height/2))
         .attr("stroke", ("rgba(255, " + b + ", 0, 1") )
     }
 
     function transformText(d) {
-      d = new google.maps.LatLng(d.value[0], d.value[1]);
-      d = projection.fromLatLngToDivPixel(d);
+      //d = new google.maps.LatLng(d.value[0], d.value[1]);
+      //d = projection.fromLatLngToDivPixel(d);
       return d3.select(this)
-        .attr("x", (d.x + map_width/2 - padding))
-        .attr("y", (d.y + map_height/2 - padding + 35))
+        .attr("x", (d.value.x + map_width/2 - padding - map_width/2))
+        .attr("y", (d.value.y + map_height/2 - padding + 15 - map_height/2))
     }
   }
 
@@ -87,7 +98,6 @@ class StationsOverlay extends google.maps.OverlayView{
     if (this.div_) {
       this.div_.selectAll("svg").attr("visibility", "visible");
       this.div_.style.visibility = 'visible';
-      heatOverlay.hide();
       gridOverlay.hide();
     }
   }
