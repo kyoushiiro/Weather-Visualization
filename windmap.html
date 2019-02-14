@@ -9,8 +9,8 @@ html, body, #map {
 
 #floating-panel {
   position: absolute;
-  top: 100px;
-  left: 25%;
+  top: 35px;
+  left: 35%;
   z-index: 5;
   background-color: #fff;
   padding: 5px;
@@ -23,12 +23,7 @@ html, body, #map {
 
 .stations, .stations svg, .grid, .grid svg, .heatmap, .heatmap svg {
   position: absolute;
-  font: 16px sans-serif;
-}
-
-.stations svg {
-  padding-right: 100px;
-  font: 16px sans-serif;
+  font: 10px sans-serif;
 }
 
 </style>
@@ -37,8 +32,9 @@ html, body, #map {
 <body>
   <h1>CMPS 161 Prog 1: Wind Map</h1>
   <div id="floating-panel">
-    <input onclick="gridOverlay.toggle();" type=button value="Toggle grid overlay">
-    <input onclick="heatOverlay.toggle();" type=button value="Toggle heat overlay">
+    <input onclick="gridOverlay.toggle();" type=button value="Vector Field Grid">
+    <input onclick="heatOverlay.toggle();" type=button value="Heatmap">
+    <input onclick="stationsOverlay.toggle();" type=button value="Weather Stations">
   </div>
   <div id="map"></div>
 

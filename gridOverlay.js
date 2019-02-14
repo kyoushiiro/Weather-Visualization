@@ -5,6 +5,7 @@ class GridOverlay extends google.maps.OverlayView{
     this.map_ = map;
     this.div_ = null;
     this.setMap(map);
+    this.hide();
   }
 
   onAdd() {
@@ -35,14 +36,14 @@ class GridOverlay extends google.maps.OverlayView{
     .append("path")
       .attr("d", "M0, -5L10,0L0,5")
 
+    if(short_grid_data == null) {
+      console.error("Short grid data not initialized before grid overlay!");
+      return;
+    }
+
     let lines = grid.selectAll("g")
-      .data(calculated_grid_data)
+      .data(short_grid_data)
       .enter().append("g")
-      .style("visibility", function(d, i) {
-        if (i%gridY_increment!= 0) {
-          return "hidden";
-        }
-      })
       .attr("transform", function (d, i) {
         return "translate(" + 0 + " " + d[i].y + ")"
       })
@@ -68,11 +69,6 @@ class GridOverlay extends google.maps.OverlayView{
         }
         return ((padding + d.speed * -d.dirY * 10 + baseLineSize) + "px")
       })
-      .style("visibility", function(d, i) {
-        if (i%gridX_increment != 0) {
-          return "hidden";
-        }
-      })
       .attr("stroke-width", "4.5px")
       .attr("stroke", "black")
       .attr("marker-end", "url(#arrowhead)")
@@ -94,11 +90,6 @@ class GridOverlay extends google.maps.OverlayView{
           baseLineSize *= -1;  
         }
         return ((padding + d.speed * -d.dirY * 10 + baseLineSize) + "px")
-      })
-      .style("visibility", function(d, i) {
-        if (i%6 != 0) {
-          return "hidden";
-        }
       })
       .attr("stroke-width", "3.5px")
       .attr("stroke", function(d) { return("rgba(255, " + (Math.pow((13.8-d.speed), 1.6) * 10.3)+ ", 0, 1") })
@@ -122,6 +113,7 @@ class GridOverlay extends google.maps.OverlayView{
     if (this.div_) {
       this.div_.selectAll("svg").attr("visibility", "visible");
       this.div_.style.visibility = 'visible';
+      stationsOverlay.hide();
     }
   }
   

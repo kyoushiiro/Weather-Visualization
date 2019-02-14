@@ -17,6 +17,7 @@ class StationsOverlay extends google.maps.OverlayView{
       return;
     }
 
+    console.log(new_station_data);
     let projection = this.getProjection(),
       padding = map_padding;
 
@@ -28,7 +29,7 @@ class StationsOverlay extends google.maps.OverlayView{
 
     let defs = grid.append("defs");
     defs.append("marker")
-      .attr("id","arrowhead")
+      .attr("id","arrowhead2")
       .attr("viewBox","0 -5 10 10")
       .attr("refX", 5).attr("refY", 0)
       .attr("markerWidth", 4).attr("markerHeight", 4)
@@ -38,23 +39,34 @@ class StationsOverlay extends google.maps.OverlayView{
       .attr("fill", "black");
     
     let lines = grid.selectAll("line")
-      .data(d3.entries(station_data)).enter().append("line").each(transform)
-      .attr("class", "arrows")
-      .attr("stroke-width", "4.5px")
-      .attr("stroke", "black")
-      .attr("marker-end", "url(#arrowhead)")
+      .data(d3.entries(station_data)).enter()
+
+    lines.append("line").each(transform)
+      .attr("stroke-width", "3.5px")
+      .attr("marker-end", "url(#arrowhead2)")
+
+    lines.insert("text").each(transformText)
+      .attr("dy", ".15em")
+      .text(function(d) { return d.key; });
 
     function transform(d) {
+      let b = Math.pow((16-d.value[2]), 1.6) * 10.3;
       d = new google.maps.LatLng(d.value[0], d.value[1]);
       d = projection.fromLatLngToDivPixel(d);
-      console.log("x:" + (d.x-padding));
-      console.log("y:" + (d.y-padding));
       return d3.select(this)
         .attr("x1", (d.x + map_width/2 - padding))
         .attr("y1", (d.y + map_height/2 - padding))
-        .attr("x2", (d.x + map_width/2 + 10 - padding))
-        .attr("y2", (d.y + map_height/2 + 10 - padding))
-        //.attr("transform", ("translate(" + d.x + map_width/2 + "," + d.y + map_height/2 + ")"))
+        .attr("x2", (d.x + map_width/2 + 20 - padding))
+        .attr("y2", (d.y + map_height/2 + 20 - padding))
+        .attr("stroke", ("rgba(255, " + b + ", 0, 1") )
+    }
+
+    function transformText(d) {
+      d = new google.maps.LatLng(d.value[0], d.value[1]);
+      d = projection.fromLatLngToDivPixel(d);
+      return d3.select(this)
+        .attr("x", (d.x + map_width/2 - padding))
+        .attr("y", (d.y + map_height/2 - padding + 35))
     }
   }
 
@@ -75,6 +87,8 @@ class StationsOverlay extends google.maps.OverlayView{
     if (this.div_) {
       this.div_.selectAll("svg").attr("visibility", "visible");
       this.div_.style.visibility = 'visible';
+      heatOverlay.hide();
+      gridOverlay.hide();
     }
   }
   

@@ -13,24 +13,3 @@ map = new google.maps.Map(d3.select("#map").node(), {
 heatOverlay = new HeatOverlay(map);
 stationsOverlay = new StationsOverlay(map);
 gridOverlay = new GridOverlay(map);
-
-gridOverlay.toggle();
-heatOverlay.toggle();
-
-/*
-marker.append("text")
-  .attr("x", padding + 7)
-  .attr("y", padding)
-  .attr("dy", ".31em")
-  .text(function(d) { return d.key; });
-
-function transform(d) {
-  console.log(d.key);
-  d = new google.maps.LatLng(d.value[0], d.value[1]);
-  d = projection.fromLatLngToDivPixel(d);
-  console.log("px:" + (d.x - padding));
-  console.log("py:" + (d.y - padding));
-  return d3.select(this)
-    .style("left", (d.x - padding) + "px")
-    .style("top", (d.y - padding) + "px");
-*/
