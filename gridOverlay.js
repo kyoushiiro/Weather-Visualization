@@ -39,7 +39,7 @@ class GridOverlay extends google.maps.OverlayView{
       .data(calculated_grid_data)
       .enter().append("g")
       .style("visibility", function(d, i) {
-        if (i%10 != 0) {
+        if (i%gridY_increment!= 0) {
           return "hidden";
         }
       })
@@ -54,14 +54,22 @@ class GridOverlay extends google.maps.OverlayView{
       .attr("class", "arrows")
       .attr("x1", function(d) { return (d.x + "px") })
       .attr("x2", function(d) { 
-        return ((d.x + d.speed * d.dirX * 4) + "px") 
+        let baseLineSize = 10;
+        if(d.dirX < 0) {
+          baseLineSize *= -1;  
+        }
+        return ((d.x + d.speed * d.dirX * 10 + baseLineSize) + "px") 
       })
       .attr("y1", padding)
       .attr("y2", function(d) {
-        return ((padding + d.speed * -d.dirY * 4) + "px")
+        let baseLineSize = 10;
+        if(d.dirY > 0) {
+          baseLineSize *= -1;  
+        }
+        return ((padding + d.speed * -d.dirY * 10 + baseLineSize) + "px")
       })
       .style("visibility", function(d, i) {
-        if (i%10 != 0) {
+        if (i%gridX_increment != 0) {
           return "hidden";
         }
       })
@@ -70,23 +78,31 @@ class GridOverlay extends google.maps.OverlayView{
       .attr("marker-end", "url(#arrowhead)")
 
     lines.insert("line")
-        .attr("class", "arrows")
-        .attr("x1", function(d) { return (d.x + "px") })
-        .attr("x2", function(d) { 
-          return ((d.x + d.speed * d.dirX * 4) + "px") 
-        })
-        .attr("y1", 0 + padding)
-        .attr("y2", function(d) {
-          return ((padding + d.speed * -d.dirY * 4) + "px")
-        })
-        .style("visibility", function(d, i) {
-          if (i%10 != 0) {
-            return "hidden";
-          }
-        })
-        .attr("stroke-width", "3.5px")
-        .attr("stroke", function(d) { return("rgba(255, " + (Math.pow((13.8-d.speed), 1.6) * 10.3)+ ", 0, 1") })
-        .attr("marker-end", "url(#arrowhead)")
+      .attr("class", "arrows")
+      .attr("x1", function(d) { return (d.x + "px") })
+      .attr("x2", function(d) { 
+        let baseLineSize = 10;
+        if(d.dirX < 0) {
+          baseLineSize *= -1;  
+        }
+        return ((d.x + d.speed * d.dirX * 10 + baseLineSize) + "px") 
+      })
+      .attr("y1", 0 + padding)
+      .attr("y2", function(d) {
+        let baseLineSize = 10;
+        if(d.dirY > 0) {
+          baseLineSize *= -1;  
+        }
+        return ((padding + d.speed * -d.dirY * 10 + baseLineSize) + "px")
+      })
+      .style("visibility", function(d, i) {
+        if (i%6 != 0) {
+          return "hidden";
+        }
+      })
+      .attr("stroke-width", "3.5px")
+      .attr("stroke", function(d) { return("rgba(255, " + (Math.pow((13.8-d.speed), 1.6) * 10.3)+ ", 0, 1") })
+      .attr("marker-end", "url(#arrowhead)")
   }
 
   onRemove() {

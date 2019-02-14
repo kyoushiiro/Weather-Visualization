@@ -8,12 +8,17 @@ class StationsOverlay extends google.maps.OverlayView{
   }
 
   onAdd() {
-    this.div_ = d3.select(this.getPanes().overlayLayer).append("div").attr("class", "grid");
+    this.div_ = d3.select(this.getPanes().overlayLayer).append("div").attr("class", "stations");
   }
 
   draw() {
+    if(station_data == null) {
+      console.error("Station data not initialized before overlay!");
+      return;
+    }
+
     let projection = this.getProjection(),
-      padding = 35;
+      padding = map_padding;
 
     let grid = this.div_.append("svg")
       .attr("width", map_width)
@@ -30,29 +35,27 @@ class StationsOverlay extends google.maps.OverlayView{
       .attr("orient", "auto")
     .append("path")
       .attr("d", "M0, -5L10,0L0,5")
-      .attr("fill", "red");
+      .attr("fill", "black");
+    
+    let lines = grid.selectAll("line")
+      .data(d3.entries(station_data)).enter().append("line").each(transform)
+      .attr("class", "arrows")
+      .attr("stroke-width", "4.5px")
+      .attr("stroke", "black")
+      .attr("marker-end", "url(#arrowhead)")
 
-    grid.selectAll("line")
-      .data(station_data)
-      .enter().append("line")
-        .attr("class", "arrows")
-        .attr("x1", transform)
-        .attr("x2", function(d) { 
-          return ((d.x + d.speed * 6) + "px") 
-        })
-        .attr("y1", 0 + padding)
-        //.attr("y2", 10 + padding)
-        .attr("y2", function(d) {
-          return ((d.speed * 6) + "px")
-        })
-        .style("visibility", function(d, i) {
-          if (i%10 != 0) {
-            return "hidden";
-          }
-        })
-        .attr("stroke-width", "2.5px")
-        .attr("stroke", "red")
-        .attr("marker-end", "url(#arrowhead)")
+    function transform(d) {
+      d = new google.maps.LatLng(d.value[0], d.value[1]);
+      d = projection.fromLatLngToDivPixel(d);
+      console.log("x:" + (d.x-padding));
+      console.log("y:" + (d.y-padding));
+      return d3.select(this)
+        .attr("x1", (d.x + map_width/2 - padding))
+        .attr("y1", (d.y + map_height/2 - padding))
+        .attr("x2", (d.x + map_width/2 + 10 - padding))
+        .attr("y2", (d.y + map_height/2 + 10 - padding))
+        //.attr("transform", ("translate(" + d.x + map_width/2 + "," + d.y + map_height/2 + ")"))
+    }
   }
 
   onRemove() {

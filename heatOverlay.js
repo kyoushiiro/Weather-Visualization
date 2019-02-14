@@ -1,5 +1,6 @@
-let calculated_grid_data = null;
-let grid_width = 100, grid_height = 100;
+let grid_width = 150, grid_height = 150;
+let tileX = parseInt(map_width/grid_width);
+let tileY = parseInt(map_height/grid_height);
 
 class HeatOverlay extends google.maps.OverlayView{
   constructor(map) {
@@ -31,16 +32,16 @@ class HeatOverlay extends google.maps.OverlayView{
       .data(calculated_grid_data)
       .enter().append("g")
       .attr("transform", function(d, i) {
-        return "translate(" + 0 + " " + d[i].y + ")"
+        return "translate(" + 0 + " " + (d[i].y - map_padding) + ")"
       })
       .selectAll("square")
       .data(function(d) { return d; })
       .enter()
       .append("rect").attr("class", "square")
-        .attr("x", function(d) { return d.x })
-        .attr("width", parseInt(map_width/grid_width))
-        .attr("height", parseInt(map_height/grid_height))
-        .style("fill", function(d) { return ("rgba(255, " + (Math.pow((13.8-d.speed), 1.6) * 10.3)+ ", 0, 0.35") });
+        .attr("x", function(d) { return d.x - map_padding})
+        .attr("width", tileX)
+        .attr("height", tileY)
+        .style("fill", function(d) { return ("rgba(255, " + (Math.pow((13.8-d.speed), 1.6) * 10.3)+ ", 0, 0.23") });
   }
 
   onRemove() {

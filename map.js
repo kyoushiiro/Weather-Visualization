@@ -1,6 +1,7 @@
 let map;
 let gridOverlay;
 let heatOverlay;
+let stationsOverlay;
 
 map = new google.maps.Map(d3.select("#map").node(), {
   zoom: 8.9,
@@ -10,7 +11,11 @@ map = new google.maps.Map(d3.select("#map").node(), {
 });
 
 heatOverlay = new HeatOverlay(map);
+stationsOverlay = new StationsOverlay(map);
 gridOverlay = new GridOverlay(map);
+
+gridOverlay.toggle();
+heatOverlay.toggle();
 
 /*
 marker.append("text")
