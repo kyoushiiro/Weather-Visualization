@@ -1,3 +1,16 @@
+<!--  
+  Alfred Lam
+  aylam@ucsc.edu
+  CMPS 161 - Prog 1
+   
+  windmap.html: this file contains the html for the webpage, as well as buttons
+                that allow the user to select which display they would like to see. 
+
+  Referenced Libraries:
+    Google Maps API
+    D3.js
+-->
+
 <!DOCTYPE html>
 <style>
 html, body, #map {
@@ -21,7 +34,7 @@ html, body, #map {
   padding-left: 10px;
 }
 
-.stations, .stations svg, .grid, .grid svg, .heatmap, .heatmap svg {
+.stations, .stations svg, .grid, .grid svg, .heatmap, .heatmap svg, .stream, .stream svg{
   position: absolute;
   font: 10px sans-serif;
 }
@@ -32,9 +45,11 @@ html, body, #map {
 <body>
   <h1>CMPS 161 Prog 1: Wind Map</h1>
   <div id="floating-panel">
-    <input onclick="gridOverlay.toggle();" type=button value="Vector Field Grid">
+    Controls:
     <input onclick="heatOverlay.toggle();" type=button value="Heatmap">
+    <input onclick="gridOverlay.toggle();" type=button value="Vector Field Grid">
     <input onclick="stationsOverlay.toggle();" type=button value="Weather Stations">
+    <input onclick="streamOverlay.toggle();" type=button value="Streamlines">
   </div>
   <div id="map"></div>
 
@@ -47,6 +62,7 @@ html, body, #map {
   <script src="heatOverlay.js" type="text/javascript"></script>
   <script src="stationsOverlay.js" type="text/javascript"></script>
   <script src="gridOverlay.js" type="text/javascript"></script>
+  <script src="streamOverlay.js" type="text/javascript"></script>
   <script src="map.js" type="text/javascript"></script>
 </body>
 </html>

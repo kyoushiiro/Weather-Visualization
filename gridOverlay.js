@@ -1,3 +1,12 @@
+/*  Alfred Lam
+ *  aylam@ucsc.edu
+ *  CMPS 161 - Prog 1
+ *  
+ *  gridOverlay.js: this file defines the grid overlay, which displays
+ *                  arrow glyphs at every defined grid point, calculated
+ *                  in stations.js 
+ */
+
 class GridOverlay extends google.maps.OverlayView{
 
   constructor(map) {
@@ -26,6 +35,7 @@ class GridOverlay extends google.maps.OverlayView{
       .style("left", ((-map_width/2 + padding)+ "px"))
       .style("top", ((-map_height/2 + padding)+ "px"))
 
+    // Define the arrow endpoint 
     let defs = grid.append("defs");
     defs.append("marker")
       .attr("id","arrowhead")
@@ -41,6 +51,7 @@ class GridOverlay extends google.maps.OverlayView{
       return;
     }
 
+    // Create an arrow for every grid point.
     let lines = grid.selectAll("g")
       .data(short_grid_data)
       .enter().append("g")
@@ -51,6 +62,7 @@ class GridOverlay extends google.maps.OverlayView{
       .data(function(d) {return d;})
       .enter()
     
+    // This first arrow is a black, slightly larger one, to act as a border for the actual arrow.
     lines.append("line")
       .attr("class", "arrows")
       .attr("x1", function(d) { return (d.x + "px") })
@@ -73,6 +85,7 @@ class GridOverlay extends google.maps.OverlayView{
       .attr("stroke", "black")
       .attr("marker-end", "url(#arrowhead)")
 
+    // This is the actual arrow.
     lines.insert("line")
       .attr("class", "arrows")
       .attr("x1", function(d) { return (d.x + "px") })
@@ -100,20 +113,20 @@ class GridOverlay extends google.maps.OverlayView{
     this.div_.parentNode.removeChild(this.div_);
   }
   
-  // Set the visibility to 'hidden' or 'visible'.
   hide() {
     if (this.div_) {
-      // The visibility property must be a string enclosed in quotes.
       this.div_.selectAll("svg").attr("visibility", "hidden");
       this.div_.style.visibility = 'hidden';
     }
   }
   
+  // Hide the other overlays if this one is shown.
   show() {
     if (this.div_) {
       this.div_.selectAll("svg").attr("visibility", "visible");
       this.div_.style.visibility = 'visible';
       stationsOverlay.hide();
+      streamOverlay.hide();
     }
   }
   

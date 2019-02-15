@@ -1,3 +1,11 @@
+/*  Alfred Lam
+ *  aylam@ucsc.edu
+ *  CMPS 161 - Prog 1
+ *  
+ *  stationsOverlay.js: this file defines the weather stations overlay, displaying
+ *                      an arrow glyph for every weather station we have data for.
+ */
+
 class StationsOverlay extends google.maps.OverlayView{
 
   constructor(map) {
@@ -17,7 +25,6 @@ class StationsOverlay extends google.maps.OverlayView{
       return;
     }
 
-    console.log(new_station_data);
     let projection = this.getProjection(),
       padding = map_padding;
 
@@ -27,6 +34,7 @@ class StationsOverlay extends google.maps.OverlayView{
       .style("left", ((-map_width/2 + padding)+ "px"))
       .style("top", ((-map_height/2 + padding)+ "px"))
 
+    // Define the arrowhead for arrow glyphs (with a unique ID from the arrows used for gridOverlay)
     let defs = grid.append("defs");
     defs.append("marker")
       .attr("id","arrowhead2")
@@ -41,6 +49,7 @@ class StationsOverlay extends google.maps.OverlayView{
     let lines = grid.selectAll("line")
       .data(new_station_data).enter()
     
+    // Create 2 arrows per data point, one for a border and one for the actual arrow
     lines.append("line").each(transform)
       .attr("stroke-width", "4.5px")
       .attr("stroke", "black")
@@ -50,10 +59,12 @@ class StationsOverlay extends google.maps.OverlayView{
       .attr("stroke-width", "3.5px")
       .attr("marker-end", "url(#arrowhead2)")
 
+    // Label each point with its location name
     lines.insert("text").each(transformText)
       .attr("dy", ".15em")
       .text(function(d) { return d.key; });
 
+    // these transform functions make it easier to position the arrows/text accordingly
     function transform(d) {
       let b = Math.pow((16-d.speed), 1.6) * 10.3;
       let baseLineSizeX = 10;
@@ -85,20 +96,20 @@ class StationsOverlay extends google.maps.OverlayView{
     this.div_.parentNode.removeChild(this.div_);
   }
   
-  // Set the visibility to 'hidden' or 'visible'.
   hide() {
     if (this.div_) {
-      // The visibility property must be a string enclosed in quotes.
       this.div_.selectAll("svg").attr("visibility", "hidden");
       this.div_.style.visibility = 'hidden';
     }
   }
   
+  // Hide the other overlays if this one is displayed.
   show() {
     if (this.div_) {
       this.div_.selectAll("svg").attr("visibility", "visible");
       this.div_.style.visibility = 'visible';
       gridOverlay.hide();
+      streamOverlay.hide();
     }
   }
   

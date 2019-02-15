@@ -1,12 +1,29 @@
+/*  Alfred Lam
+ *  aylam@ucsc.edu
+ *  CMPS 161 - Prog 1
+ *  
+ *  stations.js: all data handling/calculations are done in this file
+ *               and saved within global variables for future use.
+ */
+
+// Original JSON data
 let station_data = null;
+
+// grid_width x grid_height sized array of interpolated data
 let calculated_grid_data = null;
+
+// keeps every nth data value from calculated_grid_data where n = grid_increment
 let short_grid_data = null;
-let new_station_data = null;
-let map_padding = 40;
-let map_width = window.outerWidth + map_padding, map_height = window.outerHeight + map_padding;
 let gridX_increment = 6, gridY_increment = 10;
 
-// Loads station data into global variable station_data.
+// converted speed/direction data from stations to pixel values
+let new_station_data = null;
+
+// google maps/svg size constraints
+let map_padding = 40;
+let map_width = window.outerWidth + map_padding, map_height = window.outerHeight + map_padding;
+
+// Load station data
 d3.json("STATION_JSON.json", function(error, data) {
   if (error) throw error;
   station_data = data;
@@ -65,6 +82,7 @@ function calc_grid(projection, data, grid_width, grid_height) {
       let numeratorSum = 0;
       let dirXSum = 0, dirYSum = 0;
       
+      // Linear interpolation from every station's data
       for(let station in new_station_data) {
         let distance = Math.sqrt(Math.pow((pxX - new_station_data[station].value.x), 2) + Math.pow((pxY - new_station_data[station].value.y), 2));
         let invDist = 1 / distance;
@@ -76,6 +94,7 @@ function calc_grid(projection, data, grid_width, grid_height) {
         dirYSum += invDist * direction.y;
       }
 
+      // keep every data value for heatmap in new_data
       new_data[row].push({
         x: pxX,
         y: pxY,
@@ -84,6 +103,7 @@ function calc_grid(projection, data, grid_width, grid_height) {
         dirY: dirYSum / invDistSum 
       });
 
+      // only keep every nth data value for grid points in short_grid_data
       if(col % gridX_increment == 0 && row % gridY_increment == 0) {
         short_grid_data[row/gridY_increment].push({
           x: pxX,
@@ -95,6 +115,6 @@ function calc_grid(projection, data, grid_width, grid_height) {
       }
     }
   }
-  console.log(short_grid_data);
+
   return new_data;
 }

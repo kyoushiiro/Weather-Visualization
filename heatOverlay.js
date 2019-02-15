@@ -1,4 +1,12 @@
-let grid_width = 150, grid_height = 150;
+/*  Alfred Lam
+ *  aylam@ucsc.edu
+ *  CMPS 161 - Prog 1
+ *  
+ *  heatOverlay.js: this file defines the heatmap overlay, including
+ *                  the grid_width and grid_height to interpolate over
+ */
+
+let grid_width = 180, grid_height = 180;
 let tileX = parseInt(map_width/grid_width);
 let tileY = parseInt(map_height/grid_height);
 
@@ -41,17 +49,15 @@ class HeatOverlay extends google.maps.OverlayView{
         .attr("x", function(d) { return d.x - map_padding})
         .attr("width", tileX)
         .attr("height", tileY)
-        .style("fill", function(d) { return ("rgba(255, " + (Math.pow((13.8-d.speed), 1.6) * 10.3)+ ", 0, 0.23") });
+        .style("fill", function(d) { return ("rgba(255, " + (Math.pow((13.8-d.speed), 1.6) * 10.3)+ ", 0, 0.33") });
   }
 
   onRemove() {
     this.div_.parentNode.removeChild(this.div_);
   }
   
-  // Set the visibility to 'hidden' or 'visible'.
   hide() {
     if (this.div_) {
-      // The visibility property must be a string enclosed in quotes.
       this.div_.selectAll("svg").attr("visibility", "hidden");
       this.div_.style.visibility = 'hidden';
     }
