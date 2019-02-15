@@ -1,4 +1,5 @@
 User Documentation
+
 Alfred Lam
 
 This program utilizes D3.js and Google Maps API to present a visualization of the wind field in the Bay Area on February 3 at 7am, based off of data collected from weather stations from the Bay Area Air Quality Management.
@@ -11,8 +12,11 @@ The user may interact with the program by selecting 1 of 3 displays through the 
 The user may also choose to toggle a heatmap, colored from yellow to red, representing lower to higher wind speed magnitudes respectively. This heatmap may be turned on along with 1 of the 3 displays above simultaneously.
 
 Comments:
+
 The initial webpage starts out with all 4 displays on, and may take a bit of time to load. Please click on one of the buttons after loading to see 1 visualization clearly.
+
 Opening the developer console while on the program page may cause strange artifacts to appear. 
+
 If the map shows a black screen, please reload the page.
 
 
